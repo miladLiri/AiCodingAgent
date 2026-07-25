@@ -3,7 +3,7 @@ Abstraction over the OpenAI API so other adapters (Anthropic, local, etc.)
 can be added later without touching agent/core.py.
 """
 from openai import OpenAI
-from config import LLM_API_KEY, LLM_BASE_URL, MODEL_NAME
+from src.config import LLM_API_KEY, LLM_BASE_URL, MODEL_NAME
 
 
 class LLMClient:

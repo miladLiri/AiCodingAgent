@@ -1,4 +1,4 @@
-from agent.core import Agent
+from src.agent.core import Agent
 
 def main():
     agent = Agent()

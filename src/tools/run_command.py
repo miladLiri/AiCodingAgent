@@ -2,7 +2,7 @@
 Executes a shell command / script. Always dangerous — must be
 confirmed by a human before running.
 """
-from tools.base import Tool
+from src.tools.base import Tool
 import subprocess
 
 

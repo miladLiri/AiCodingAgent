@@ -4,8 +4,9 @@ and the tool-calling loop with human-in-the-loop confirmation for
 dangerous actions.
 """
 import json
-from models.llm import LLMClient
-from tools import build_tool_registry
+from src.models.llm import LLMClient
+from src.tools.base import ToolRegistry
+from src.tools import build_tool_registry
 
 SYSTEM_PROMPT = """You are a helpful command-line AI agent.
 You can answer questions directly, search the web, and manipulate files
@@ -17,9 +18,9 @@ SYSTEM_MESSAGE = {"role": "system", "content": SYSTEM_PROMPT}
 
 
 class Agent:
-    def __init__(self):
+    def __init__(self, tool_registry: ToolRegistry | None):
         self.llm = LLMClient()
-        self.tool_registry = build_tool_registry()
+        self.tool_registry = tool_registry if tool_registry else build_tool_registry()
         self.messages = [SYSTEM_MESSAGE]
 
     def _confirm(self, tool_name: str, args: dict) -> bool:

@@ -1,4 +1,4 @@
-from tools.base import Tool
+from src.tools.base import Tool
 
 def edit_file(path: str, old_content: str, new_content: str) -> str:
     """

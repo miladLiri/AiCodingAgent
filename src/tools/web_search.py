@@ -3,8 +3,8 @@ Web search tool. Uses Tavily (simple, LLM-friendly search API).
 Swap the implementation freely; the interface stays the same.
 """
 import requests
-from tools.base import Tool
-from config import SEARCH_API_KEY
+from src.tools.base import Tool
+from src.config import SEARCH_API_KEY
 
 
 def web_search(query: str, max_results: int = 5) -> str:
