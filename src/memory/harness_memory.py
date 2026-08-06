@@ -1,7 +1,7 @@
 from langchain_core.messages import BaseMessage
 from src.memory.base_memory_compressor import BaseMemoryCompressor
 
-class AgentMemory:
+class HarnessMemory:
     def __init__(
         self,
         compressor: BaseMemoryCompressor,

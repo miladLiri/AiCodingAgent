@@ -1,7 +1,7 @@
 
 from langchain_core.messages import HumanMessage, AIMessage
 
-from memory.harness_memory import HarnessMemory
+from src.memory.harness_memory import HarnessMemory
 from src.loops.tool_calling_loop import ToolCallingLoop
 from src.llms.harness_llm import HarnessLLM
 
@@ -21,7 +21,7 @@ class ConversationLoop:
         human_message = HumanMessage(content=user_message)
         self.memory.add(human_message)
         
-        ai_message : AIMessage = self.harness_llm.invoke(self.memory.get_messages())
+        ai_message : AIMessage = self.harness_llm.invoke(self.memory.get())
         self.memory.add(ai_message)
         
         if ai_message.tool_calls:

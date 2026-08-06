@@ -1,4 +1,3 @@
-from typing import Callable
 from langchain.tools import BaseTool
 
 class ToolExecutionGuard:
@@ -11,7 +10,7 @@ class ToolExecutionGuard:
     def execute(self, tool: BaseTool, *args, **kwargs):
         if not self.__check_and_confirm(tool.name):
             return f"[ABORTED] '{tool.name}' was now allowed by user."
-        return tool(*args, **kwargs)
+        return tool.invoke(*args, **kwargs)
 
     def __check_and_confirm(self, tool_name: str) -> bool:
         if tool_name not in self._dangerous:

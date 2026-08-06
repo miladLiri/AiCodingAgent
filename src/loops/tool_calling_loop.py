@@ -1,5 +1,5 @@
 from langchain_core.messages import ToolMessage, AIMessage, ToolCall
-from memory.harness_memory import AgentMemory
+from src.memory.harness_memory import HarnessMemory
 from src.tools.common.tool_execution_guard import ToolExecutionGuard
 from src.tools.common.tool_registry import ToolRegistry
 from src.llms.harness_llm import HarnessLLM
@@ -12,7 +12,7 @@ class ToolCallingLoop:
         self,
         harness_llm: HarnessLLM,
         tool_registry: ToolRegistry,
-        memory: AgentMemory,
+        memory: HarnessMemory,
         tool_execution_guard: ToolExecutionGuard,
     ):
         self.tool_registry = tool_registry
@@ -29,9 +29,9 @@ class ToolCallingLoop:
 
             for tool_call in ai_message.tool_calls:
 
-                tool: BaseTool = self.tool_registry.get(tool_call.name)
-                tool_call_result: str = self.tool_execution_guard.execute(tool, tool_call.args)
-                tool_message = ToolMessage(content=tool_call_result, tool_call_id= tool_call.id)
+                tool: BaseTool = self.tool_registry.get(tool_call["name"])
+                tool_call_result: str = self.tool_execution_guard.execute(tool, tool_call["args"])
+                tool_message = ToolMessage(content=tool_call_result, tool_call_id= tool_call["id"])
                 self.memory.add(tool_message)
 
             ai_message : AIMessage = self.harness_llm.invoke(self.memory.get())

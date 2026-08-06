@@ -1,12 +1,12 @@
 from src.memory.memory_compressor_llm import MemoryCompressorLLM
 from src.memory.compression_strategies.rolling_summery_compressor import RollingSummaryCompressor
-from src.memory.agent_memory import AgentMemory
+from src.memory.harness_memory import HarnessMemory
 from src.tools.common.tool_registry import ToolRegistry
 from src.tools.common.tool_execution_guard import ToolExecutionGuard
 from src.tools.read_file import read_file
-from src.models.harness_llm import HarnessLLM
-from src.loop.tool_calling_loop import ToolCallingLoop
-from src.loop.conversation_loop import ConversationLoop
+from src.llms.harness_llm import HarnessLLM
+from src.loops.tool_calling_loop import ToolCallingLoop
+from src.loops.conversation_loop import ConversationLoop
 
 class Harness:
 
@@ -15,7 +15,7 @@ class Harness:
         #memory
         memory_compressor_llm = MemoryCompressorLLM()
         rolling_summary_compressor = RollingSummaryCompressor(llm=memory_compressor_llm)
-        agent_memory = AgentMemory(compressor=rolling_summary_compressor)
+        agent_memory = HarnessMemory(compressor=rolling_summary_compressor)
 
         #tools
         tool_registry = ToolRegistry()
