@@ -4,6 +4,7 @@ from src.memory.harness_memory import HarnessMemory
 from src.tools.common.tool_registry import ToolRegistry
 from src.tools.common.tool_execution_guard import ToolExecutionGuard
 from src.tools.read_file import read_file
+from src.tools.create_diagram import create_diagram
 from src.llms.harness_llm import HarnessLLM
 from src.loops.tool_calling_loop import ToolCallingLoop
 from src.loops.conversation_loop import ConversationLoop
@@ -22,6 +23,7 @@ class Harness:
         tool_execution_guard = ToolExecutionGuard()
 
         tool_registry.register(read_file)
+        tool_registry.register(create_diagram)
         tool_execution_guard.register_dangerous(read_file)
 
         #llm

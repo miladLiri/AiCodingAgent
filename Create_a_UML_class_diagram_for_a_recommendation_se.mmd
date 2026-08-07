@@ -1,0 +1,88 @@
+classDiagram
+direction TB
+
+class Customer {
+  +String customerId
+  +String name
+  +String email
+  +List~PizzaPreference~ preferences
+  +List~Order~ orderHistory
+  +List~BrowseEvent~ browseHistory
+  +addPreference(PizzaPreference preference)
+  +List~Order~ getOrderHistory()
+}
+
+class Order {
+  +String orderId
+  +DateTime orderDate
+  +List~OrderItem~ items
+  +Decimal totalAmount
+  +List~Pizza~ getPurchasedPizzas()
+}
+
+class OrderItem {
+  +int quantity
+  +Pizza pizza
+  +Decimal unitPrice
+}
+
+class Pizza {
+  +String pizzaId
+  +String name
+  +List~String~ ingredients
+  +String category
+  +Decimal basePrice
+}
+
+class PizzaPreference {
+  +List~String~ preferredIngredients
+  +List~String~ dislikedIngredients
+  +String preferredCategory
+}
+
+class BrowseEvent {
+  +String eventId
+  +String pizzaId
+  +String eventType
+  +DateTime timestamp
+}
+
+class RecommendationService {
+  +recommendForCustomer(Customer customer)
+  +recommendByOrders(Customer customer)
+  +recommendByBrowsing(Customer customer)
+  +recommendSimilarPizzas(Pizza pizza)
+  +updatePreferences(Customer customer, Pizza pizza)
+}
+
+class RecommendationEngine {
+  +scorePizza(Customer customer, Pizza pizza)
+  +rankPizzas(Customer customer, List~Pizza~ pizzas)
+  +List~Pizza~ getTopRecommendations(Customer customer, int limit)
+}
+
+class PizzaCatalog {
+  +findPizzaById(String pizzaId)
+  +List~Pizza~ getAllPizzas()
+  +List~Pizza~ getPizzasByCategory(String category)
+}
+
+class NotificationService {
+  +sendRecommendation(Customer customer, List~Pizza~ pizzas)
+  +sendPromotion(Customer customer, String message)
+}
+
+Customer "1..*" o-- "0..*" Order : has
+Customer "0..*" --> "0..*" BrowseEvent : generates
+Customer "0..*" --> "0..*" PizzaPreference : has
+
+Order "1..*" *-- "1..*" OrderItem : contains
+OrderItem "1" --> "1" Pizza : references
+
+RecommendationService ..> RecommendationEngine : uses
+RecommendationService ..> PizzaCatalog : uses
+RecommendationService ..> NotificationService : triggers
+
+RecommendationEngine ..> PizzaCatalog : depends
+
+PizzaCatalog "many" o-- "many" Pizza : contains

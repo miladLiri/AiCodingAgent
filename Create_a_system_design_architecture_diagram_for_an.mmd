@@ -1,0 +1,126 @@
+graph TB
+    %% Frontend
+    subgraph Frontend["Frontend"]
+        WebApp[Web App]
+        MobileApp[Mobile App]
+        AdminPortal[Admin Portal]
+        Customer[Customers]
+        Customer --> WebApp
+        Customer --> MobileApp
+    end
+
+    %% Edge
+    subgraph Edge["Edge"]
+        CDN[CDN]
+        WAF[WAF]
+        APIGW[API Gateway]
+    end
+
+    %% Core Services
+    subgraph CoreServices["Core Services"]
+        AuthSvc[Authentication Service]
+        CatalogSvc[Catalog Service]
+        CartSvc[Cart Service]
+        OrderSvc[Order Service]
+        PaymentSvc[Payment Service]
+        DispatchSvc[Delivery / Dispatch Service]
+        NotifySvc[Notification Service]
+        SearchSvc[Search Service]
+        RecoSvc[Recommendation Service]
+        EventBus[Message Queue / Event Bus]
+    end
+
+    %% Data Layer
+    subgraph DataLayer["Data Layer"]
+        UserDB[(User DB)]
+        CatalogDB[(Catalog DB)]
+        CartDB[(Cart DB)]
+        OrderDB[(Order DB)]
+        PaymentDB[(Payment DB)]
+        DeliveryDB[(Delivery DB)]
+        AnalyticsDB[(Analytics DB)]
+        Cache[(Cache)]
+    end
+
+    %% External Services
+    subgraph ExternalServices["External Services"]
+        PaymentGateway[Payment Gateway]
+        SMSProvider[SMS / Email Provider]
+        MapsAPI[Maps / Geolocation API]
+        PushProvider[Push Notification Provider]
+    end
+
+    %% Primary customer flow
+    WebApp --> CDN
+    MobileApp --> CDN
+    CDN --> WAF
+    WAF --> APIGW
+
+    %% API Gateway routing
+    APIGW --> AuthSvc
+    APIGW --> CatalogSvc
+    APIGW --> CartSvc
+    APIGW --> SearchSvc
+    APIGW --> RecoSvc
+    APIGW --> OrderSvc
+
+    %% Admin portal
+    AdminPortal --> APIGW
+    APIGW --> CatalogSvc
+    APIGW --> OrderSvc
+
+    %% Service interactions
+    CartSvc --> Cache
+    CartSvc --> CartDB
+    AuthSvc --> UserDB
+    CatalogSvc --> CatalogDB
+    CatalogSvc --> Cache
+    SearchSvc --> CatalogDB
+    SearchSvc --> Cache
+    RecoSvc --> AnalyticsDB
+    RecoSvc --> CatalogDB
+
+    OrderSvc --> OrderDB
+    OrderSvc --> PaymentSvc
+    PaymentSvc --> PaymentDB
+    PaymentSvc --> PaymentGateway
+
+    %% Event-driven communication
+    OrderSvc --> EventBus
+    DispatchSvc --> EventBus
+    NotifySvc --> EventBus
+    EventBus --> DispatchSvc
+    EventBus --> NotifySvc
+
+    %% Delivery / dispatch
+    DispatchSvc --> DeliveryDB
+    DispatchSvc --> MapsAPI
+
+    %% Notifications
+    NotifySvc --> SMSProvider
+    NotifySvc --> PushProvider
+
+    %% Analytics and support
+    OrderSvc --> AnalyticsDB
+    CatalogSvc --> AnalyticsDB
+    CartSvc --> AnalyticsDB
+    DispatchSvc --> AnalyticsDB
+    NotifySvc --> AnalyticsDB
+
+    %% Customer-facing outcomes
+    OrderSvc --> Customer
+    NotifySvc --> Customer
+    DispatchSvc --> Customer
+
+    %% Styling hints via grouped architecture emphasis
+    classDef edge fill:#e8f3ff,stroke:#4a90e2,stroke-width:1px;
+    classDef service fill:#f7f9fc,stroke:#8a94a6,stroke-width:1px;
+    classDef data fill:#fff7e8,stroke:#d99a2b,stroke-width:1px;
+    classDef external fill:#fbe9ef,stroke:#d36b8a,stroke-width:1px;
+    classDef frontend fill:#eefaf2,stroke:#5aa469,stroke-width:1px;
+
+    class WebApp,MobileApp,AdminPortal,Customer frontend;
+    class CDN,WAF,APIGW edge;
+    class AuthSvc,CatalogSvc,CartSvc,OrderSvc,PaymentSvc,DispatchSvc,NotifySvc,SearchSvc,RecoSvc,EventBus service;
+    class UserDB,CatalogDB,CartDB,OrderDB,PaymentDB,DeliveryDB,AnalyticsDB,Cache data;
+    class PaymentGateway,SMSProvider,MapsAPI,PushProvider external;
